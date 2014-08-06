@@ -1,6 +1,6 @@
 {
   "name": "reduce-function-call",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Reduce function calls in a string, using a callback",
   "keywords": [
     "string",
