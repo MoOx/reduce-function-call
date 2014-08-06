@@ -5,5 +5,7 @@
   "asi": true,
   "esnext": true,
   "node": true,
-  "browser": true
+  "browser": true,
+
+  "evil": true
 }
