@@ -17,10 +17,10 @@ module.exports = reduceFunctionCall
  * @param {Object} declaration
  */
 
-function reduceFunctionCall(string, functionIdentifier, callback) {
+function reduceFunctionCall(string, functionRE, callback) {
   var call = string
-  return getFunctionCalls(string, functionIdentifier).reduce(function(string, obj) {
-    return string.replace(obj.functionIdentifier + "(" + obj.matches.body + ")", evalFunctionCall(obj.matches.body, obj.functionIdentifier, callback, call))
+  return getFunctionCalls(string, functionRE).reduce(function(string, obj) {
+    return string.replace(obj.functionIdentifier + "(" + obj.matches.body + ")", evalFunctionCall(obj.matches.body, obj.functionIdentifier, callback, call, functionRE))
   }, string)
 }
 
@@ -32,24 +32,24 @@ function reduceFunctionCall(string, functionIdentifier, callback) {
  * @api private
  */
 
-function getFunctionCalls(call, functionIdentifier) {
+function getFunctionCalls(call, functionRE) {
   var expressions = []
 
-  var fnRE = typeof functionIdentifier === "string" ? new RegExp("\\b(" + functionIdentifier + ")\\(") : functionIdentifier
+  var fnRE = typeof functionRE === "string" ? new RegExp("\\b(" + functionRE + ")\\(") : functionRE
   do {
     var searchMatch = fnRE.exec(call)
     if (!searchMatch) {
       return expressions
     }
     if (searchMatch[1] === undefined) {
-      throw new Error("Missing the first couple of parenthesis to get the function identifier in " + functionIdentifier)
+      throw new Error("Missing the first couple of parenthesis to get the function identifier in " + functionRE)
     }
     var fn = searchMatch[1]
     var startIndex = searchMatch.index
     var matches = balanced("(", ")", call.substring(startIndex))
 
     if (!matches) {
-      throw new SyntaxError(functionIdentifier + "(): missing closing ')' in the value '" + call + "'")
+      throw new SyntaxError(fn + "(): missing closing ')' in the value '" + call + "'")
     }
 
     expressions.push({matches: matches, functionIdentifier: fn})
@@ -68,7 +68,7 @@ function getFunctionCalls(call, functionIdentifier) {
  * @api private
  */
 
-function evalFunctionCall (string, functionIdentifier, callback, call) {
+function evalFunctionCall (string, functionIdentifier, callback, call, functionRE) {
   // allow recursivity
-  return callback(reduceFunctionCall(string, functionIdentifier, callback), functionIdentifier, call)
+  return callback(reduceFunctionCall(string, functionRE, callback), functionIdentifier, call)
 }

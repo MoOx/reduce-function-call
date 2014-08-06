@@ -46,12 +46,12 @@ test("recursivity", function(t) {
 })
 
 test("RegExp", function(t) {
-  t.equal(reduceFunctionCall("sha bla blah() blaa bla() abla() aabla() blaaa()", /\b([a-z]?bla[a-z]?)\(/, function(body, functionIdentifier) {
+  t.equal(reduceFunctionCall("sha bla blah(abla()) blaa bla() abla() aabla() blaaa()", /\b([a-z]?bla[a-z]?)\(/, function(body, functionIdentifier) {
     if (functionIdentifier === "bla") {
-      return "ABRACADABRA"
+      return "ABRACADABLA"
     }
-    return functionIdentifier.replace("bla", "!")
-  }), "sha bla !h blaa ABRACADABRA a! aabla() blaaa()", "should support with regular expressions")
+    return functionIdentifier.toUpperCase() + "{" + body + "}"
+  }), "sha bla BLAH{ABLA{}} blaa ABRACADABLA ABLA{} aabla() blaaa()", "should support with regular expressions")
 
   t.throws(function() { reduceFunctionCall("blaa()", /\b[a-z]?bla[a-z]?\(/) }, Error, "should throw an error if RegExp doesn't have at least a couple of parenthesis to catch the identifier name")
   t.end()
