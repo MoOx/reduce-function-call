@@ -2,6 +2,7 @@
  * Module dependencies
  */
 var balanced = require("balanced-match")
+var reduce = require("promise-reduce")
 
 /**
  * Expose `reduceFunctionCall`
@@ -13,15 +14,23 @@ module.exports = reduceFunctionCall
 /**
  * Walkthrough all expressions, evaluate them and insert them into the declaration
  *
- * @param {Array} expressions
- * @param {Object} declaration
+ * @param {string} declaration
+ * @param {string|RegExp} filter
+ * @param {function} callback
+ * @returns {Promise}
  */
-
-function reduceFunctionCall(string, functionRE, callback) {
-  var call = string
-  return getFunctionCalls(string, functionRE).reduce(function(string, obj) {
-    return string.replace(obj.functionIdentifier + "(" + obj.matches.body + ")", evalFunctionCall(obj.matches.body, obj.functionIdentifier, callback, call, functionRE))
-  }, string)
+function reduceFunctionCall(declaration, filter, callback) {
+  return getFunctionCalls(declaration, filter)
+    .then(reduce(function(memo, expression) {
+      return reduceFunctionCall(expression.matches.body, filter, callback)
+        .then(function(result) {
+          return callback(result, expression.functionIdentifier, declaration)
+        })
+        .then(function(result) {
+          var pristineFunctionCall = expression.functionIdentifier + "(" + expression.matches.body + ")"
+          return memo.replace(pristineFunctionCall, result)
+        })
+    }, declaration))
 }
 
 /**
@@ -39,17 +48,17 @@ function getFunctionCalls(call, functionRE) {
   do {
     var searchMatch = fnRE.exec(call)
     if (!searchMatch) {
-      return expressions
+      return Promise.resolve(expressions)
     }
     if (searchMatch[1] === undefined) {
-      throw new Error("Missing the first couple of parenthesis to get the function identifier in " + functionRE)
+      return Promise.reject(new Error("Missing the first couple of parenthesis to get the function identifier in " + functionRE))
     }
     var fn = searchMatch[1]
     var startIndex = searchMatch.index
     var matches = balanced("(", ")", call.substring(startIndex))
 
     if (!matches || matches.start !== searchMatch[0].length - 1) {
-      throw new SyntaxError(fn + "(): missing closing ')' in the value '" + call + "'")
+      return Promise.reject(SyntaxError(fn + "(): missing closing ')' in the value '" + call + "'"))
     }
 
     expressions.push({matches: matches, functionIdentifier: fn})
@@ -57,18 +66,5 @@ function getFunctionCalls(call, functionRE) {
   }
   while (fnRE.test(call))
 
-  return expressions
-}
-
-/**
- * Evaluates an expression
- *
- * @param {String} expression
- * @returns {String}
- * @api private
- */
-
-function evalFunctionCall (string, functionIdentifier, callback, call, functionRE) {
-  // allow recursivity
-  return callback(reduceFunctionCall(string, functionRE, callback), functionIdentifier, call)
+  return Promise.resolve(expressions)
 }
