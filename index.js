@@ -17,11 +17,18 @@ module.exports = reduceFunctionCall
  * @param {Object} declaration
  */
 
-function reduceFunctionCall(string, functionRE, callback) {
-  var call = string
-  return getFunctionCalls(string, functionRE).reduce(function(string, obj) {
-    return string.replace(obj.functionIdentifier + "(" + obj.matches.body + ")", evalFunctionCall(obj.matches.body, obj.functionIdentifier, callback, call, functionRE))
-  }, string)
+function reduceFunctionCall(string, regex, callback) {
+  var calls = getFunctionCalls(string, regex)
+  return calls.reduce(function(sequence, call) {
+    return sequence.then(function() {
+      var transform = callback(call.matches.body, call.functionIdentifier, string)
+      return Promise.resolve(transform).then(function(replacement) {
+        var target = call.functionIdentifier + "(" + call.matches.body + ")"
+        string = string.replace(target, replacement)
+        return string
+      })
+    })
+  }, Promise.resolve())
 }
 
 /**
@@ -58,17 +65,4 @@ function getFunctionCalls(call, functionRE) {
   while (fnRE.test(call))
 
   return expressions
-}
-
-/**
- * Evaluates an expression
- *
- * @param {String} expression
- * @returns {String}
- * @api private
- */
-
-function evalFunctionCall (string, functionIdentifier, callback, call, functionRE) {
-  // allow recursivity
-  return callback(reduceFunctionCall(string, functionRE, callback), functionIdentifier, call)
 }
