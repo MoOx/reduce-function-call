@@ -24,7 +24,7 @@
     "index.js"
   ],
   "dependencies": {
-    "balanced-match": "^0.4.2"
+    "balanced-match": "^1.0.0"
   },
   "devDependencies": {
     "jscs": "^2.0.0",
