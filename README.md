@@ -1,4 +1,4 @@
-# reduce-function-call [![Build Status](https://travis-ci.org/MoOx/reduce-function-call.png)](https://travis-ci.org/MoOx/reduce-function-call)
+# reduce-function-call [![Build Status](https://travis-ci.org/MoOx/reduce-function-call.svg?branch=master)](https://travis-ci.org/MoOx/reduce-function-call)
 
 > Reduce function calls in a string, using a callback
 
@@ -10,7 +10,7 @@
 
 ## Installation
 
-```bash
+```console
 npm install reduce-function-call
 ```
 
@@ -65,7 +65,7 @@ See [unit tests](test/index.js) for others examples.
 
 Work on a branch, install dev-dependencies, respect coding style & run tests before submitting a bug fix or a feature.
 
-```bash
+```console
 git clone https://github.com/MoOx/reduce-function-call.git
 git checkout -b patch-1
 npm install
