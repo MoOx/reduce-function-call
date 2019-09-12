@@ -2,6 +2,12 @@
 
 > Reduce function calls in a string, using a callback
 
+---
+
+[Professionally supported reduce-function-call is now available](https://tidelift.com/subscription/pkg/npm-reduce-function-call?utm_source=npm-reduce-function-call&utm_medium=referral&utm_campaign=readme)
+
+---
+
 ## Installation
 
 ```bash
