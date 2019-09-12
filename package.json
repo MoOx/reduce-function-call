@@ -27,17 +27,11 @@
     "balanced-match": "^1.0.0"
   },
   "devDependencies": {
-    "jscs": "^2.0.0",
-    "jshint": "^2.8.0",
-    "jshint-stylish": "^2.0.1",
     "npmpub": "^3.1.0",
-    "tap-colorize": "^1.2.0",
     "tape": "^4.0.3"
   },
   "scripts": {
-    "jscs": "jscs *.js **/*.js",
-    "jshint": "jshint . --exclude node_modules --reporter node_modules/jshint-stylish/index.js",
-    "test": "npm run jscs && npm run jshint && tape test | tap-colorize",
+    "test": "tape test",
     "release": "npmpub"
   }
 }
