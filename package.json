@@ -26,12 +26,8 @@
   "dependencies": {
     "balanced-match": "^1.0.0"
   },
-  "devDependencies": {
-    "npmpub": "^4.1.0",
-    "tape": "^4.0.3"
-  },
   "scripts": {
-    "test": "tape test",
-    "release": "npmpub"
+    "test": "node --test test/",
+    "release": "npx npmpub"
   }
 }
