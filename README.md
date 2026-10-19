@@ -1,4 +1,8 @@
-# reduce-function-call [![Build Status](https://travis-ci.org/MoOx/reduce-function-call.svg?branch=master)](https://travis-ci.org/MoOx/reduce-function-call)
+# reduce-function-call
+
+[![GitHub package.json version](https://img.shields.io/github/package-json/v/MoOx/reduce-function-call) ![npm downloads](https://img.shields.io/npm/dm/reduce-function-call)](https://www.npmjs.com/package/reduce-function-call)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/MoOx/reduce-function-call/test.yml)](https://github.com/MoOx/reduce-function-call/actions)
+[![License](https://img.shields.io/github/license/MoOx/reduce-function-call)](LICENSE)
 
 > Reduce function calls in a string, using a callback
 
@@ -63,7 +67,7 @@ See [unit tests](test/index.js) for others examples.
 
 ## Contributing
 
-Work on a branch, install dev-dependencies, respect coding style & run tests before submitting a bug fix or a feature.
+Work on a branch, respect the coding style and run tests before submitting a bug fix or a feature.
 
 ```console
 git clone https://github.com/MoOx/reduce-function-call.git
